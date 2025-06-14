@@ -34,4 +34,15 @@ def download_file(server_host, port, file_name):
     data_port = int(parts[6])
     data_sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
 
-  
+    received = bytearray()
+    for start in range(0, size, 1000):
+        end = min(start + 999, size - 1)
+        msg = f"FILE {file_name} GET START {start} END {end}"
+        chunk, _ = send_and_receive(data_sock, msg, (server_host, data_port))
+        if chunk and "DATA" in chunk:
+            encoded_data = chunk.split("DATA ")[1]
+            decoded = base64.b64decode(encoded_data)
+            received.extend(decoded)
+            print(f"Received {start}-{end}")
+
+   
