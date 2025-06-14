@@ -44,5 +44,16 @@ def download_file(server_host, port, file_name):
             decoded = base64.b64decode(encoded_data)
             received.extend(decoded)
             print(f"Received {start}-{end}")
+# 发送关闭
+    send_and_receive(data_sock, f"FILE {file_name} CLOSE", (server_host, data_port))
+    with open(file_name, "wb") as f:
+        f.write(received)
+    print(f"File {file_name} downloaded.")
 
-   
+# 主入口
+if __name__ == "__main__":
+    host = sys.argv[1]
+    port = int(sys.argv[2])
+    list_file = sys.argv[3]
+
+    
