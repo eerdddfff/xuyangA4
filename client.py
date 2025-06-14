@@ -56,4 +56,8 @@ if __name__ == "__main__":
     port = int(sys.argv[2])
     list_file = sys.argv[3]
 
-    
+    with open(list_file) as f:
+        files = f.read().splitlines()
+
+    for file in files:
+        download_file(host, port, file)
