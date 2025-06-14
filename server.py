@@ -5,7 +5,6 @@ import random
 import os
 import sys
 
-
 def handle_client(file_name, client_addr, server_addr):
     # 使用新端口传输数据
     port = random.randint(50000, 51000)
@@ -41,3 +40,15 @@ def handle_client(file_name, client_addr, server_addr):
     finally:
         new_sock.close()
 
+# 主入口
+if __name__ == "__main__":
+    port = int(sys.argv[1])
+    server = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    server.bind(("", port))
+    print(f"Server running on UDP port {port}")
+
+    while True:
+        msg, addr = server.recvfrom(1024)
+        if msg.startswith(b"DOWNLOAD"):
+            file_name = msg.decode().split()[1]
+            threading.Thread(target=handle_client, args=(file_name, addr, '')).start()
